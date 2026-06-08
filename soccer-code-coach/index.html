@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Soccer Code Coach</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Soccer Code Coach home">
+          <span class="brand-mark" aria-hidden="true">SC</span>
+          <span>Soccer Code Coach</span>
+        </a>
+        <div class="nav-links">
+          <a href="#learn">Learn</a>
+          <a href="#practice">Practice</a>
+          <a href="#glossary">Glossary</a>
+          <a href="#plan">Game Plan</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Java and Python, explained like match tactics</p>
+          <h1>Build coding skill one training session at a time.</h1>
+          <p class="hero-text">
+            Learn programming fundamentals with soccer analogies, side-by-side Java and
+            Python examples, quick quizzes, and drills that help you move from beginner
+            touches to confident playmaking.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#learn">Start training</a>
+            <a class="button secondary" href="#practice">Try a drill</a>
+          </div>
+        </div>
+        <aside class="scoreboard" aria-label="Learning progress summary">
+          <p class="scoreboard-label">Training score</p>
+          <div class="score">
+            <span id="completedCount">0</span>
+            <span aria-hidden="true">/</span>
+            <span id="totalCount">0</span>
+          </div>
+          <p id="coachMessage">Pick a module to begin your warm-up.</p>
+          <div class="pitch-progress" aria-hidden="true">
+            <div id="progressBall" class="progress-ball"></div>
+          </div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="section intro">
+        <div>
+          <p class="eyebrow">How this app teaches</p>
+          <h2>Every coding idea becomes a soccer idea.</h2>
+        </div>
+        <div class="intro-cards">
+          <article>
+            <span class="icon">1</span>
+            <h3>Warm up</h3>
+            <p>Read the simple concept and soccer analogy.</p>
+          </article>
+          <article>
+            <span class="icon">2</span>
+            <h3>Watch the play</h3>
+            <p>Compare Java and Python code for the same tactic.</p>
+          </article>
+          <article>
+            <span class="icon">3</span>
+            <h3>Run the drill</h3>
+            <p>Answer a quiz and complete a small challenge.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="learn" class="section training">
+        <div class="section-heading">
+          <p class="eyebrow">Step-by-step lessons</p>
+          <h2>Choose your training focus.</h2>
+          <p>
+            Start with fundamentals, then work into loops, data structures, and
+            object-oriented thinking. Switch languages any time.
+          </p>
+        </div>
+
+        <div class="controls" role="group" aria-label="Lesson filters">
+          <button class="filter-button active" data-track="all">Full team</button>
+          <button class="filter-button" data-track="python">Python</button>
+          <button class="filter-button" data-track="java">Java</button>
+        </div>
+
+        <div id="lessonGrid" class="lesson-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="practice" class="section practice">
+        <div class="section-heading">
+          <p class="eyebrow">Training ground</p>
+          <h2>Practice like a midfielder scanning the field.</h2>
+          <p>
+            Select a drill, think through the soccer version, then translate it into
+            Java or Python.
+          </p>
+        </div>
+
+        <div class="practice-layout">
+          <div class="drill-card">
+            <label for="drillSelect">Choose a drill</label>
+            <select id="drillSelect"></select>
+            <div id="drillDetails" class="drill-details"></div>
+          </div>
+
+          <div class="quiz-card">
+            <div class="quiz-header">
+              <div>
+                <p class="eyebrow">Quick check</p>
+                <h3 id="quizTitle">Coach question</h3>
+              </div>
+              <button id="nextQuiz" class="button secondary" type="button">Next question</button>
+            </div>
+            <p id="quizQuestion"></p>
+            <div id="quizOptions" class="quiz-options"></div>
+            <p id="quizFeedback" class="quiz-feedback" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="glossary" class="section glossary">
+        <div class="section-heading">
+          <p class="eyebrow">Soccer-to-code glossary</p>
+          <h2>Translate tactics into programming vocabulary.</h2>
+        </div>
+        <div id="glossaryGrid" class="glossary-grid"></div>
+      </section>
+
+      <section id="plan" class="section plan">
+        <div class="section-heading">
+          <p class="eyebrow">Improvement plan</p>
+          <h2>Your weekly training rhythm.</h2>
+          <p>
+            Repeat this loop for each module. The goal is steady ball control:
+            understand, copy, change, and build.
+          </p>
+        </div>
+        <ol class="plan-list">
+          <li>
+            <strong>First touch:</strong>
+            Read one lesson and say the soccer analogy out loud in your own words.
+          </li>
+          <li>
+            <strong>Passing drill:</strong>
+            Type both examples by hand, then change player names, scores, or limits.
+          </li>
+          <li>
+            <strong>Small-sided game:</strong>
+            Finish the drill without looking at the solution for at least 10 minutes.
+          </li>
+          <li>
+            <strong>Match review:</strong>
+            Explain what broke, what fixed it, and what pattern you saw.
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Soccer Code Coach: learn Java and Python through the beautiful game.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
