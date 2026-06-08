@@ -37,7 +37,8 @@ a {
 }
 
 button,
-select {
+select,
+input {
   font: inherit;
 }
 
@@ -509,13 +510,21 @@ label {
   font-weight: 900;
 }
 
-select {
+select,
+input {
   width: 100%;
   border: 1px solid rgba(18, 32, 22, 0.16);
   border-radius: 14px;
   padding: 12px;
   background: #ffffff;
   color: var(--ink);
+}
+
+input:focus,
+select:focus {
+  border-color: var(--grass);
+  box-shadow: 0 0 0 4px rgba(15, 123, 75, 0.12);
+  outline: 0;
 }
 
 .drill-details {
@@ -530,6 +539,63 @@ select {
   padding-left: 20px;
   color: var(--muted);
   line-height: 1.75;
+}
+
+.drill-score {
+  display: inline-flex;
+  margin: 12px 0 2px;
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: var(--grass-light);
+  color: var(--grass-dark);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.answer-checks {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.answer-check {
+  border: 1px solid rgba(18, 32, 22, 0.1);
+  border-radius: 18px;
+  padding: 16px;
+  background: #fbfefc;
+}
+
+.answer-check.correct {
+  border-color: rgba(15, 123, 75, 0.44);
+  background: var(--grass-light);
+}
+
+.answer-check.incorrect {
+  border-color: rgba(217, 71, 71, 0.46);
+  background: #fff5f5;
+}
+
+.answer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.answer-feedback {
+  min-height: 24px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.answer-check.correct .answer-feedback {
+  color: var(--grass-dark);
+}
+
+.answer-check.incorrect .answer-feedback {
+  color: #a83232;
 }
 
 .quiz-header {
@@ -647,5 +713,9 @@ select {
   .lesson-card-header,
   .quiz-header {
     flex-direction: column;
+  }
+
+  .answer-row {
+    grid-template-columns: 1fr;
   }
 }
