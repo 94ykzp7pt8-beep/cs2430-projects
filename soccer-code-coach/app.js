@@ -282,6 +282,7 @@ print(total)`,
 
 const drills = [
   {
+    id: "scoreboard",
     title: "Build a scoreboard",
     analogy: "Like the stadium screen, your program tracks both teams and updates the score after goals.",
     steps: [
@@ -289,9 +290,26 @@ const drills = [
       "Write a function that adds one goal to the selected team.",
       "Print the score as 'Home 2 - Away 1'.",
       "Stretch goal: stop the program from accepting negative scores."
+    ],
+    checks: [
+      {
+        prompt: "The home team has 2 goals and the away team has 1. What exact scoreboard text should your program print?",
+        placeholder: "Example: Lions 0 - Tigers 0",
+        accepted: ["Home 2 - Away 1"],
+        hint: "Use the format Team score - Team score.",
+        success: "Goal. Your scoreboard output matches the match situation."
+      },
+      {
+        prompt: "Python check: what expression turns a text score stored in score into a number before adding 1?",
+        placeholder: "Type the expression",
+        accepted: ["int(score)+1", "int(score) + 1"],
+        hint: "Python uses int(...) to convert text into an integer.",
+        success: "Clean finish. You converted the score before adding."
+      }
     ]
   },
   {
+    id: "best-pass",
     title: "Choose the best pass",
     analogy: "Your code scans teammates like a midfielder looking up before releasing the ball.",
     steps: [
@@ -299,9 +317,26 @@ const drills = [
       "Loop through the list and choose the teammate with the highest rating.",
       "Print the chosen pass target.",
       "Stretch goal: ignore any teammate marked as offside."
+    ],
+    checks: [
+      {
+        prompt: "Riley has rating 6, Sam has rating 9, and Jordan has rating 7. Who should receive the pass?",
+        placeholder: "Type the player name",
+        accepted: ["Sam"],
+        hint: "Pick the highest open-space rating.",
+        success: "Perfect through ball. You selected the strongest passing option."
+      },
+      {
+        prompt: "Java check: which comparison operator means 'greater than' when finding a higher rating?",
+        placeholder: "Type the operator",
+        accepted: [">"],
+        hint: "It points toward the larger value.",
+        success: "Right read. That operator finds the higher-rated option."
+      }
     ]
   },
   {
+    id: "training-session",
     title: "Track a training session",
     analogy: "A coach logs reps, completion, and improvement after every drill.",
     steps: [
@@ -309,6 +344,22 @@ const drills = [
       "Store how many reps were completed for each drill.",
       "Calculate the total reps.",
       "Stretch goal: print the drill with the most reps."
+    ],
+    checks: [
+      {
+        prompt: "Passing has 12 reps, shooting has 8 reps, and sprinting has 10 reps. What is the total?",
+        placeholder: "Type the number",
+        accepted: ["30"],
+        hint: "Add all three drill counts.",
+        success: "Coach approves. Your total reps are correct."
+      },
+      {
+        prompt: "Which drill had the most reps: passing, shooting, or sprinting?",
+        placeholder: "Type the drill name",
+        accepted: ["passing"],
+        hint: "Compare 12, 8, and 10.",
+        success: "Good match review. Passing had the highest workload."
+      }
     ]
   }
 ];
@@ -399,7 +450,8 @@ const glossary = [
 const state = {
   filter: "all",
   selectedQuiz: 0,
-  completed: new Set(JSON.parse(localStorage.getItem("soccerCodeCoachCompleted") || "[]"))
+  completed: new Set(JSON.parse(localStorage.getItem("soccerCodeCoachCompleted") || "[]")),
+  drillResults: JSON.parse(localStorage.getItem("soccerCodeCoachDrillResults") || "{}")
 };
 
 const lessonGrid = document.querySelector("#lessonGrid");
@@ -497,6 +549,29 @@ function saveProgress() {
   localStorage.setItem("soccerCodeCoachCompleted", JSON.stringify([...state.completed]));
 }
 
+function saveDrillResults() {
+  localStorage.setItem("soccerCodeCoachDrillResults", JSON.stringify(state.drillResults));
+}
+
+function normalizeAnswer(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[;'"`]/g, "")
+    .replace(/\s+/g, "");
+}
+
+function answerMatches(value, acceptedAnswers) {
+  const normalizedValue = normalizeAnswer(value);
+  return acceptedAnswers.some((answer) => normalizeAnswer(answer) === normalizedValue);
+}
+
+function drillScore(drill) {
+  const results = state.drillResults[drill.id] || {};
+  const correct = drill.checks.filter((_, index) => results[index]?.correct).length;
+  return { correct, total: drill.checks.length };
+}
+
 function renderDrills() {
   drillSelect.innerHTML = drills
     .map((drill, index) => `<option value="${index}">${drill.title}</option>`)
@@ -506,12 +581,38 @@ function renderDrills() {
 
 function renderSelectedDrill() {
   const drill = drills[Number(drillSelect.value) || 0];
+  const score = drillScore(drill);
   drillDetails.innerHTML = `
     <h3>${drill.title}</h3>
     <p>${drill.analogy}</p>
+    <p class="drill-score">Interactive checks: ${score.correct}/${score.total} correct</p>
     <ul>
       ${drill.steps.map((step) => `<li>${step}</li>`).join("")}
     </ul>
+    <div class="answer-checks">
+      ${drill.checks
+        .map((check, index) => {
+          const result = state.drillResults[drill.id]?.[index];
+          const statusClass = result ? (result.correct ? "correct" : "incorrect") : "";
+          const feedback = result
+            ? result.correct
+              ? check.success
+              : `Not quite. ${check.hint}`
+            : "Type your answer, then check it.";
+
+          return `
+            <form class="answer-check ${statusClass}" data-drill-id="${drill.id}" data-check-index="${index}">
+              <label for="${drill.id}-${index}">${check.prompt}</label>
+              <div class="answer-row">
+                <input id="${drill.id}-${index}" name="answer" type="text" placeholder="${check.placeholder}" autocomplete="off" value="${escapeHtml(result?.value || "")}">
+                <button class="button primary" type="submit">Check answer</button>
+              </div>
+              <p class="answer-feedback" aria-live="polite">${feedback}</p>
+            </form>
+          `;
+        })
+        .join("")}
+    </div>
   `;
 }
 
@@ -582,6 +683,34 @@ lessonGrid.addEventListener("click", (event) => {
 });
 
 drillSelect.addEventListener("change", renderSelectedDrill);
+
+drillDetails.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const form = event.target.closest(".answer-check");
+  if (!form) {
+    return;
+  }
+
+  const drill = drills.find((item) => item.id === form.dataset.drillId);
+  const checkIndex = Number(form.dataset.checkIndex);
+  const check = drill.checks[checkIndex];
+  const input = form.querySelector("input");
+  const value = input.value;
+  const isCorrect = answerMatches(value, check.accepted);
+
+  state.drillResults[drill.id] = state.drillResults[drill.id] || {};
+  state.drillResults[drill.id][checkIndex] = {
+    correct: isCorrect,
+    value
+  };
+  saveDrillResults();
+  renderSelectedDrill();
+
+  const updatedInput = drillDetails.querySelector(`#${drill.id}-${checkIndex}`);
+  updatedInput.focus();
+  updatedInput.setSelectionRange(updatedInput.value.length, updatedInput.value.length);
+});
 
 quizOptions.addEventListener("click", (event) => {
   const button = event.target.closest("[data-option]");

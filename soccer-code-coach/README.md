@@ -12,6 +12,7 @@ set-piece routines, and debugging is match film review.
 - Side-by-side Java and Python examples for every concept.
 - Soccer-themed explanations and practice drills.
 - Interactive lesson completion tracking saved in the browser.
+- Typed practice checks that show whether learner input is right or wrong.
 - Quick quiz questions with feedback.
 - A glossary that translates soccer ideas into programming vocabulary.
 - A repeatable study plan for continued practice.
@@ -38,5 +39,6 @@ No install step is required. The app uses plain HTML, CSS, and JavaScript.
 1. Start at Step 1 and read the soccer analogy before the code.
 2. Type the Python example by hand, then switch to Java and type that version.
 3. Mark the lesson complete after you can explain the idea in your own words.
-4. Complete one practice drill for every two lessons.
+4. Complete one practice drill for every two lessons and use the typed answer
+   checks to see whether your input is correct.
 5. Use the quiz as match review, then build your own small program from scratch.
